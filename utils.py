@@ -35,3 +35,18 @@ def delete_deployment(api_instance, deployment_name):
     except ApiException as e:
         logging.warning("Deployment deletion of %s did not completed %s"  % (deployment_name, str(e)))
         return False
+
+
+def create_service(api_instance, service):
+    """
+    :param api_instance:
+    :param service:
+    :return:
+    """
+    try:
+        resp = api_instance.create_namespaced_service(body=service, namespace="default")
+        logging.info("Service %s is successfully created. " % str(service['metadata']['name']))
+        return True
+    except ApiException as e:
+        logging.warning("Service creation of %s did not completed %s"  % (str(service['metadata']['name']), str(e)))
+        return False
