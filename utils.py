@@ -19,3 +19,19 @@ def create_deployment(api_instance, deployment):
     except ApiException as e:
         logging.warning("Deployment creation of %s did not completed %s"  % (str(deployment['metadata']['name']), str(e)))
         return False
+
+
+def delete_deployment(api_instance, deployment_name):
+    """
+    :param api_instance:
+    :param deployment:
+    :return:
+    """
+    try:
+        resp = api_instance.delete_namespaced_deployment(name=deployment_name, namespace="default")
+
+        logging.info("Deployment %s is successfully deleted. " % str(deployment_name))
+        return True
+    except ApiException as e:
+        logging.warning("Deployment deletion of %s did not completed %s"  % (deployment_name, str(e)))
+        return False
