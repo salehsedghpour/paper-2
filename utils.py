@@ -24,7 +24,7 @@ def create_deployment(api_instance, deployment):
 def delete_deployment(api_instance, deployment_name):
     """
     :param api_instance:
-    :param deployment:
+    :param deployment_name:
     :return:
     """
     try:
@@ -49,4 +49,19 @@ def create_service(api_instance, service):
         return True
     except ApiException as e:
         logging.warning("Service creation of %s did not completed %s"  % (str(service['metadata']['name']), str(e)))
+        return False
+
+
+def delete_service(api_instance, service_name):
+    """
+    :param api_instance:
+    :param service_name:
+    :return:
+    """
+    try:
+        resp = api_instance.delete_namespaced_service(name=service_name, namespace="default")
+        logging.info("Service %s is successfully deleted. " % str(service_name))
+        return True
+    except ApiException as e:
+        logging.warning("Service deletion of %s did not completed %s"  % (str(service_name), str(e)))
         return False
