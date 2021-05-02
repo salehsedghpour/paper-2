@@ -127,3 +127,50 @@ def delete_circuit_breaker(api_instance, service_name):
         return False
 
 
+def create_retry(api_instance, service_name, attempts, timeout):
+    """
+    :param api_instance:
+    :param service_name:
+    :param max_requests:
+    :return:
+    """
+    try:
+        retry = {
+          "apiVersion": "networking.istio.io/v1alpha3",
+          "kind": "VirtualService",
+          "metadata": {
+            "name": service_name +"-retry"
+          },
+          "spec": {
+            "hosts": [
+              service_name+".default.svc.cluster.local"
+            ],
+            "http": [
+              {
+                "route": [
+                  {
+                    "destination": {
+                      "host": service_name+".default.svc.cluster.local",
+                    }
+                  }
+                ],
+                "retries": {
+                  "attempts": attempts,
+                  "perTryTimeout": timeout
+                }
+              }
+            ]
+          }
+        }
+        api_instance.create_namespaced_custom_object(
+            namespace="default",
+            body=retry,
+            group="networking.istio.io",
+            version="v1alpha3",
+            plural="virtualservices"
+        )
+        logging.info("Retry mechanism for service %s with value of %s is successfully created. " % (str(service_name), str(attempts)))
+        return True
+    except ApiException as e:
+        logging.warning("Retry mechanism creation for service %s is not completed. %s" % (str(service_name), str(e)))
+        return False
