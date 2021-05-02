@@ -24,6 +24,17 @@ def create_deployment(api_instance, deployment, cpu=None):
         return False
 
 
+def patch_deployment(api_instance, deployment_name, deployment):
+    try:
+        resp = api_instance.patch_namespaced_deployment(name=deployment_name, body=deployment, namespace="default")
+
+        logging.info("Deployment %s is successfully updated. " % str(deployment['metadata']['name']))
+        return True
+    except ApiException as e:
+        logging.warning("Deployment update of %s did not completed %s"  % (str(deployment['metadata']['name']), str(e)))
+        return False
+
+
 def delete_deployment(api_instance, deployment_name):
     """
     :param api_instance:
