@@ -68,3 +68,40 @@ def delete_service(api_instance, service_name):
     except ApiException as e:
         logging.warning("Service deletion of %s did not completed %s"  % (str(service_name), str(e)))
         return False
+
+
+def create_circuit_breaker(api_instance, service_name, max_requests):
+    """
+    :param api_instance:
+    :param service_name:
+    :param max_requests:
+    :return:
+    """
+    try:
+        cb = {
+            "apiVersion": "networking.istio.io/v1alpha3",
+            "kind": "DestinationRule",
+            "metadata": {"name": service_name+"-cb"},
+            "spec": {
+                "host": service_name,
+                "trafficPolicy":{
+                    "connectionPool":{
+                        "http": {"http2MaxRequests": max_requests}
+                    }
+                }
+            }
+        }
+        api_instance.create_namespaced_custom_object(
+            namespace="default",
+            body=cb,
+            group="networking.istio.io",
+            version="v1alpha3",
+            plural="destinationrules"
+        )
+        logging.info("Circuit breaker for service %s with value of %s is successfully created. " % (str(service_name), str(max_requests)))
+        return True
+    except ApiException as e:
+        logging.warning("Circuit breaker creation for service %s is not completed. %s" % (str(service_name), str(e)))
+        return False
+
+
