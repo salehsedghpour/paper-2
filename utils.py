@@ -5,13 +5,16 @@ from kubernetes.client.rest import ApiException
 logging.basicConfig(format='%(asctime)s - [%(levelname)s]  %(message)s', datefmt='%d/%m/%Y %I:%M:%S', level=logging.INFO)
 
 
-def create_deployment(api_instance, deployment):
+def create_deployment(api_instance, deployment, cpu=None):
     """
     :param api_instance:
     :param deployment:
     :return:
     """
     try:
+        if cpu:
+            deployment['spec']['template']['spec']['containers'][0]['resources']['limits']['cpu'] = cpu
+            deployment['spec']['template']['spec']['containers'][0]['resources']['requests']['cpu'] = cpu
         resp = api_instance.create_namespaced_deployment(body=deployment, namespace="default")
 
         logging.info("Deployment %s is successfully created. " % str(deployment['metadata']['name']))
