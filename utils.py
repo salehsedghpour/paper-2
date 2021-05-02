@@ -131,7 +131,8 @@ def create_retry(api_instance, service_name, attempts, timeout):
     """
     :param api_instance:
     :param service_name:
-    :param max_requests:
+    :param attempts:
+    :param timeout:
     :return:
     """
     try:
