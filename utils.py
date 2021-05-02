@@ -175,3 +175,25 @@ def create_retry(api_instance, service_name, attempts, timeout):
     except ApiException as e:
         logging.warning("Retry mechanism creation for service %s is not completed. %s" % (str(service_name), str(e)))
         return False
+
+
+def delete_retry(api_instance, service_name):
+    """
+    :param api_instance:
+    :param service_name:
+    :return:
+    """
+    try:
+        api_instance.delete_namespaced_custom_object(
+            namespace="default",
+            group="networking.istio.io",
+            version="v1alpha3",
+            plural="virtualservices",
+            name=service_name+"-retry"
+        )
+        logging.info("Retry mechanism for service %s is successfully deleted. " % str(service_name))
+        return True
+    except ApiException as e:
+        logging.warning(
+            "Retry mechanims deletion for service %s is not completed. %s" % (str(service_name), str(e)))
+        return False
