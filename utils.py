@@ -1,4 +1,4 @@
-import logging, yaml
+import logging, yaml, psycopg2
 from kubernetes.client.rest import ApiException
 
 
@@ -208,3 +208,31 @@ def delete_retry(api_instance, service_name):
         logging.warning(
             "Retry mechanims deletion for service %s is not completed. %s" % (str(service_name), str(e)))
         return False
+
+
+def insert_db(values):
+    try:
+        connection = psycopg2.connect(user="postgres",
+                                      password="Alirez@6617",
+                                      host="130.239.41.56",
+                                      port="5432",
+                                      database="experiments")
+        cursor = connection.cursor()
+
+        postgres_insert_query = """ INSERT INTO experiments.experiment ( name, scenario, cb, retry, retry_time_out, cpu
+        , start_time, end_time, response_time_url, requests_url) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        cursor.execute(postgres_insert_query, values)
+
+        connection.commit()
+        count = cursor.rowcount
+        logging.info("The experiment is successfully added to DB")
+
+    except (Exception, psycopg2.Error) as e:
+        logging.warning("Failed to insert record to the table. %s" %  str(e))
+
+    finally:
+        # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+            logging.info("PostgreSQL connection is closed")

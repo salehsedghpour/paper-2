@@ -103,7 +103,7 @@ def response_time(data):
             charts_st[service]['cb'] = len(charts_st[service]['success'])*[0]
     # Front end
     axs[5, 0].plot(charts_rt['frontend'], label="95th-RT")
-    axs[5, 0].legend(bbox_to_anchor=(.7, 1.7), loc='upper left', fontsize="x-small")
+    # axs[5, 0].legend(bbox_to_anchor=(.7, 1.7), loc='upper left', fontsize="x-small")
     axs[5, 0].set_title("Frontend")
     axs[5, 0].set_ylabel("Latency")
     axs[6, 0].plot(charts_st['frontend']['success'], label="successful")
@@ -221,17 +221,17 @@ def response_time(data):
     axs[11, 2].set_xlabel("Time (s)")
     axs[11, 2].set_ylabel("RPS")
 
-    lines = [
-        plt.Line2D((.7, 1), (.17, .17), color="k", linewidth=3),
-        plt.Line2D((.7, 1), (.335, .335), color="k", linewidth=3),
-        plt.Line2D((.7, 1), (.5, .5), color="k", linewidth=3),
-        plt.Line2D((.7, 1), (.665, .665), color="k", linewidth=3),
-        plt.Line2D((.7, 1), (.83, .83), color="k", linewidth=3)
-
-    ]
-    for line in lines:
-        fig.add_artist(line)
-    title = "CB-"+str(data['cb'])+ "_Retry-"+str(data['retry'])+ "_Scenario-"+str(data['scenario']) +"_CPU-" +str(data['cpu'])+'.png'
-    plt.savefig("./results/"+title)
+    # lines = [
+    #     plt.Line2D((.7, 1), (.17, .17), color="k", linewidth=3),
+    #     plt.Line2D((.7, 1), (.335, .335), color="k", linewidth=3),
+    #     plt.Line2D((.7, 1), (.5, .5), color="k", linewidth=3),
+    #     plt.Line2D((.7, 1), (.665, .665), color="k", linewidth=3),
+    #     plt.Line2D((.7, 1), (.83, .83), color="k", linewidth=3)
+    #
+    # ]
+    # #for line in lines:
+    #     #fig.add_artist(line)
+    title = "CB-"+str(data['cb'])+ "_Retry-"+str(data['retry'])+ "+R-timeout-"+str(data['retry_to'])+"_Scenario-"+str(data['scenario']) +"_CPU-" +str(data['cpu'])+'.png'
+    plt.savefig("../results/"+title)
     logging.info("%s is successfully created and saved." % str(title))
 
