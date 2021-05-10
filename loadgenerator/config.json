@@ -1,0 +1,15 @@
+{
+  "tasks":{
+    "index": 1,
+    "setCurrency": 0,
+    "browseProduct": 0,
+    "addToCart": 0,
+    "viewCart": 0,
+    "checkout": 0
+  },
+  "wait_time": {
+    "min": 0,
+    "max": 0
+  }
+
+}
